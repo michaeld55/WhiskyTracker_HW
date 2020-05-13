@@ -5,10 +5,7 @@ import com.codeclan.example.WhiskyTracker.repositories.DistilleryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,5 +37,26 @@ public class DistilleryController {
 
         return new ResponseEntity<>(distilleryRepository.findAll(), HttpStatus.OK);
 
+    }
+
+    @PostMapping
+    public ResponseEntity<Distillery> postDistillery(@RequestBody Distillery distillery){
+        distilleryRepository.save(distillery);
+        return new ResponseEntity<>(distillery, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Distillery> putDistillery(@RequestBody Distillery distillery,@PathVariable Long id){
+        if(!distillery.getId().equals(id) ){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        distilleryRepository.save(distillery);
+        return new ResponseEntity<>(distillery, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<List<Distillery>> deleteDistillery(@PathVariable Long id){
+        distilleryRepository.deleteById(id);
+        return new ResponseEntity<>(distilleryRepository.findAll(), HttpStatus.OK);
     }
 }
